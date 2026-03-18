@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+}
+
+<!-- Hero Section -->
+<div class="about-hero py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold text-center mb-4">Our Story</h1>
+        <p class="lead text-center">Brewing happiness since 2024</p>
+    </div>
+</div>
+
+<!-- Our Story -->
+<div class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <img src="/images/about-story.jpg" alt="Our Cafe" class="img-fluid rounded shadow">
+        </div>
+        <div class="col-lg-6">
+            <h2 class="mb-4">Welcome to BrewNest Cafe</h2>
+            <p class="lead">Founded in 2024, BrewNest Cafe started as a small passion project by coffee enthusiasts who believed in serving the perfect cup of coffee.</p>
+            <p>Our mission is to create a cozy nest where everyone feels at home. We source our beans from sustainable farms and roast them locally to ensure maximum freshness.</p>
+            <p>Every cup tells a story - from the farmers who grow the beans to our baristas who craft your drink with love.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Our Values -->
+<div class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Our Values</h2>
+        <div class="row">
+            @foreach (var value in ViewBag.OurValues)
+            {
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="value-card text-center p-4 h-100">
+                        <i class="bi bi-star-fill display-4 text-primary mb-3"></i>
+                        <h5>@value</h5>
+                        <p class="text-muted mb-0">We prioritize quality in everything we do</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Team Section -->
+<div class="container py-5">
+    <h2 class="text-center mb-5">Meet Our Team</h2>
+    <div class="row">
+        @foreach (var member in ViewBag.TeamMembers)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="team-card text-center">
+                    <div class="team-img mb-3">
+                        <img src="/images/team/@member.Image" alt="@member.Name" class="img-fluid rounded-circle">
+                    </div>
+                    <h5>@member.Name</h5>
+                    <p class="text-muted">@member.Position</p>
+                    <div class="social-links">
+                        <a href="#" class="text-muted me-2"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="text-muted me-2"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-muted"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .about-hero {
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/images/about-hero.jpg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+    }
+
+    .value-card {
+        background: white;
+        border-radius: 10px;
+        transition: all 0.3s;
+    }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+    .team-card {
+        padding: 30px;
+        border-radius: 15px;
+        background: white;
+        transition: all 0.3s;
+    }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+    .team-img img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border: 5px solid var(--cream-white);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+</style>

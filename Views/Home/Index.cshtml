@@ -1,0 +1,288 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Ambient Background Orbs -->
+<div class="ambient-orb ambient-orb-1"></div>
+<div class="ambient-orb ambient-orb-2"></div>
+
+<!-- Hero Section -->
+<section class="hero-wrapper gsap-hero">
+    <div class="hero-img-container">
+        <!-- Parallax background image via GSAP -->
+        <img src="/images/coffee-bg.jpg" alt="Rich Coffee Background" class="hero-img" id="heroBg">
+    </div>
+    
+    <div class="container h-100 position-relative z-3">
+        <div class="row h-100 align-items-center">
+            <div class="col-lg-8 hero-content">
+                <span class="hero-badge gsap-fade-up">Est. 2024 &bull; Premium Quality</span>
+                <h1 class="hero-title gsap-fade-up" style="animation-delay: 0.1s;">
+                    Experience the <i>Soul</i><br />
+                    of Perfect <span class="gradient-text">Coffee</span>
+                </h1>
+                <p class="hero-lead gsap-fade-up" style="animation-delay: 0.2s;">
+                    Step into an atmosphere draped in velvet shadows and liquid gold. Hand-roasted beans, meticulous extraction, and an unforgettable aesthetic journey.
+                </p>
+                <div class="d-flex flex-wrap gap-4 mt-5 gsap-fade-up" style="animation-delay: 0.3s;">
+                    <a asp-controller="Menu" asp-action="Index" class="btn-premium btn-premium-gold">
+                        Explore Collection <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                    <a asp-controller="About" asp-action="Index" class="btn-premium btn-premium-outline">
+                        Our Process
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block position-relative gsap-fade-up" style="animation-delay: 0.4s;">
+                <!-- Floating decorative element -->
+                <div class="glass-panel p-4 text-center" style="transform: rotate(3deg);">
+                    <i class="bi bi-droplet-fill d-block mb-3" style="font-size: 3rem; color: var(--clr-accent-gold);"></i>
+                    <h5 class="mb-1" style="font-family: var(--font-body); font-weight: 500;">Single Origin</h5>
+                    <p class="small text-muted mb-0">Ethiopia Yirgacheffe</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Signatures Section (Featured Items) -->
+<section class="section-premium">
+    <div class="container">
+        <div class="section-title-wrapper gsap-fade-up-scroll">
+            <span class="section-subtitle">Our Masterpieces</span>
+            <h2 class="section-title">Signature Blends</h2>
+        </div>
+        
+        <div class="row g-5">
+            @if (ViewBag.FeaturedItems != null)
+            {
+                int delay = 0;
+                @foreach (var item in ViewBag.FeaturedItems)
+                {
+                    <div class="col-lg-4 col-md-6 gsap-stagger-card" data-delay="@delay">
+                        <div class="premium-card h-100">
+                            <div class="premium-card-img-wrap">
+                                <img src="@item.ImageUrl" class="premium-card-img" alt="@item.Name">
+                                <div class="premium-card-price">$@item.Price.ToString("0.00")</div>
+                            </div>
+                            <div class="premium-card-body">
+                                <h4 class="premium-card-title">@item.Name</h4>
+                                <p class="premium-card-desc">@item.Description</p>
+                                <div class="mt-auto pt-4 border-top border-secondary border-opacity-10 d-flex justify-content-between align-items-center">
+                                    <div class="text-warning">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill opacity-50"></i>
+                                    </div>
+                                    <a asp-controller="Menu" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-light hover-gold transition-all">
+                                        View <i class="bi bi-chevron-right small"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    delay += 100;
+                }
+            }
+        </div>
+        <div class="text-center mt-5 pt-5 gsap-fade-up-scroll">
+            <a asp-controller="Menu" asp-action="Index" class="btn-premium btn-premium-outline">
+                View Full Menu
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- The Experience Split Section -->
+<section class="section-premium bg-black bg-opacity-50 split-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6 gsap-slide-right">
+                <div class="split-img-wrapper" style="box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
+                    <img src="/images/cafe-interior.jpg" alt="Rich Cafe Interior" class="split-img" id="interiorImg">
+                    <div class="position-absolute top-50 start-50 translate-middle text-center w-100">
+                         <div class="glass-panel d-inline-block px-4 py-3 border border-warning border-opacity-25" style="border-radius: 40px;">
+                             <span class="fs-5" style="color: var(--clr-accent-gold); letter-spacing: 0.2rem;">EST. 2024</span>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-1 split-content gsap-slide-left">
+                <span class="section-subtitle mb-3">The Atmosphere</span>
+                <h2 class="section-title mb-5" style="font-size: 3rem;">A Journey of the <span class="gradient-text">Senses</span></h2>
+                
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="bi bi-cup-hot"></i></div>
+                    <div class="feature-text">
+                        <h5 class="text-light">Artisan Roasting</h5>
+                        <p>Small-batch roasted on site every morning for unparalleled freshness and depth.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="bi bi-moon-stars"></i></div>
+                    <div class="feature-text">
+                        <h5 class="text-light">Evening Ambiance</h5>
+                        <p>As the sun sets, our cafe transforms into a moody, low-lit sanctuary for deep conversations.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item mb-5">
+                    <div class="feature-icon"><i class="bi bi-award"></i></div>
+                    <div class="feature-text">
+                        <h5 class="text-light">Master Baristas</h5>
+                        <p>Curated by award-winning professionals who treat every pull as a work of art.</p>
+                    </div>
+                </div>
+                
+                <a asp-controller="About" asp-action="Index" class="btn-premium btn-premium-gold">Read Our Story</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section-premium">
+    <div class="container">
+        <div class="section-title-wrapper gsap-fade-up-scroll">
+            <span class="section-subtitle">Echoes</span>
+            <h2 class="section-title">What They Say</h2>
+        </div>
+        
+        <div class="row g-4">
+            @if (ViewBag.Feedbacks != null)
+            {
+                int delay = 0;
+                @foreach (var feedback in ViewBag.Feedbacks)
+                {
+                    <div class="col-md-4 gsap-stagger-card" data-delay="@delay">
+                        <div class="testimonial-card-premium">
+                            <i class="bi bi-quote testimonial-quote-icon"></i>
+                            <div class="testimonial-stars">
+                                @for (int i = 0; i < feedback.Rating; i++)
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                            </div>
+                            <p class="testimonial-text">"@feedback.Message"</p>
+                            <div class="testimonial-author">
+                                <div class="author-avatar"><i class="bi bi-person"></i></div>
+                                <div class="author-info">
+                                    <h6 class="text-light">@feedback.Name</h6>
+                                    <span>Verified Guest</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    delay += 100;
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="section-premium border-top border-secondary border-opacity-10" style="background: radial-gradient(circle at center, rgba(207,170,106,0.05) 0%, transparent 70%);">
+    <div class="container text-center">
+        <h2 class="section-title mb-4 gsap-fade-up-scroll" style="font-size: clamp(3rem, 6vw, 4.5rem);">Awaken Your <span style="color: var(--clr-accent-gold); font-style: italic;">Senses</span></h2>
+        <p class="lead text-muted mx-auto mb-5 gsap-fade-up-scroll" style="max-width: 600px;">
+            Reserve an evening table or order your morning ritual ahead of time.
+        </p>
+        <div class="d-flex justify-content-center gap-4 flex-wrap gsap-fade-up-scroll">
+            <a asp-controller="Contact" asp-action="Index" class="btn-premium btn-premium-outline px-5">Contact</a>
+            <a asp-controller="Menu" asp-action="Index" class="btn-premium btn-premium-gold px-5">Order Now</a>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Hero Intro Animation
+            gsap.fromTo(".gsap-fade-up", 
+                { y: 60, opacity: 0 }, 
+                { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out", delay: 0.2 }
+            );
+
+            // Parallax Hero Image
+            gsap.to("#heroBg", {
+                yPercent: 30,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".hero-wrapper",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+            
+            // Fade Up on Scroll for Generic Elements
+            gsap.utils.toArray(".gsap-fade-up-scroll").forEach(elem => {
+                gsap.fromTo(elem, 
+                    { y: 50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, ease: "power2.out",
+                      scrollTrigger: {
+                          trigger: elem,
+                          start: "top 85%",
+                          toggleActions: "play none none reverse"
+                      }
+                    }
+                );
+            });
+
+            // Stagger Cards
+            ScrollTrigger.batch(".gsap-stagger-card", {
+                onEnter: batch => gsap.fromTo(batch, 
+                    { opacity: 0, y: 50 },
+                    { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" }
+                ),
+                start: "top 85%"
+            });
+
+            // Split Section Parallax Image
+            gsap.to("#interiorImg", {
+                scale: 1.2,
+                scrollTrigger: {
+                    trigger: ".split-section",
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1
+                }
+            });
+
+            // Slide In Animations
+            gsap.fromTo(".gsap-slide-right",
+                { x: -100, opacity: 0 },
+                { x: 0, opacity: 1, duration: 1.2, ease: "power3.out",
+                  scrollTrigger: {
+                      trigger: ".split-section",
+                      start: "top 70%"
+                  }
+                }
+            );
+
+            gsap.fromTo(".gsap-slide-left",
+                { x: 100, opacity: 0 },
+                { x: 0, opacity: 1, duration: 1.2, ease: "power3.out",
+                  scrollTrigger: {
+                      trigger: ".split-section",
+                      start: "top 70%"
+                  }
+                }
+            );
+            
+            // Navbar behavior
+            window.addEventListener('scroll', () => {
+                if(window.scrollY > 50) {
+                    document.querySelector('.navbar').classList.add('scrolled');
+                } else {
+                    document.querySelector('.navbar').classList.remove('scrolled');
+                }
+            });
+        });
+    </script>
+}

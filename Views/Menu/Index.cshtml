@@ -1,0 +1,432 @@
+﻿@model IEnumerable<BrewNestCafe.Models.MenuItem>
+@{
+    ViewData["Title"] = "Our Menu";
+}
+
+<!-- Hero Section -->
+<div class="menu-hero py-5 parallax">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-4 fw-bold text-white mb-4 fade-in">Our Delicious Menu</h1>
+                <p class="lead text-white-50 mb-4">Carefully crafted with the finest ingredients and served with passion</p>
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                        <i class="bi bi-star-fill me-1"></i>Premium Quality
+                    </span>
+                    <span class="badge bg-light text-dark fs-6 px-3 py-2">
+                        <i class="bi bi-heart-fill me-1 text-danger"></i>Fresh Daily
+                    </span>
+                    <span class="badge bg-info text-white fs-6 px-3 py-2">
+                        <i class="bi bi-cup-hot-fill me-1"></i>Expert Baristas
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Menu Filter -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-center flex-wrap gap-2 mb-4">
+                    <a asp-action="Index" class="btn btn-outline-primary active">
+                        <i class="bi bi-grid me-2"></i>All Items
+                    </a>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <a asp-action="Index" asp-route-category="@category.Name"
+                           class="btn btn-outline-primary">
+                            <i class="bi bi-tag me-2"></i>@category.Name
+                        </a>
+                    }
+                </div>
+                <div class="text-center">
+                    <p class="text-muted mb-0">Click on any category to filter our delicious offerings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Menu Items -->
+    <div class="container">
+        @if (Model != null && Model.Any())
+        {
+            <div class="row g-4">
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-4 col-md-6 fade-in">
+                        <div class="card menu-item-card h-100">
+                            <div class="position-relative overflow-hidden">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name">
+                                }
+                                else
+                                {
+                                    <div class="card-img-top bg-gradient d-flex align-items-center justify-content-center" style="height: 220px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                                        <i class="bi bi-cup-hot text-muted" style="font-size: 4rem;"></i>
+                                    </div>
+                                }
+                                @if (item.IsAvailable)
+                                {
+                                    <span class="badge bg-success position-absolute top-0 end-0 m-3 px-3 py-2">
+                                        <i class="bi bi-check-circle me-1"></i>Available
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger position-absolute top-0 end-0 m-3 px-3 py-2">
+                                        <i class="bi bi-x-circle me-1"></i>Out of Stock
+                                    </span>
+                                }
+                            </div>
+
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title mb-0 flex-grow-1">@item.Name</h5>
+                                    @if (item.Category != null)
+                                    {
+                                        <span class="badge bg-primary ms-2 flex-shrink-0">@item.Category.Name</span>
+                                    }
+                                </div>
+
+                                <p class="card-text text-muted mb-3 flex-grow-1">@item.Description</p>
+
+                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                    <div class="price-section">
+                                        <span class="h4 text-primary fw-bold mb-0">$@item.Price.ToString("0.00")</span>
+                                        <small class="text-muted d-block">per serving</small>
+                                    </div>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">
+                                        <i class="bi bi-eye me-2"></i>Details
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="card-footer bg-transparent border-0 pt-0">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-success w-100" onclick="addToFavorites(@item.Id)">
+                                            <i class="bi bi-heart me-1"></i>Favorite
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-warning w-100" onclick="shareItem(@item.Id)">
+                                            <i class="bi bi-share me-1"></i>Share
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Menu Statistics -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="bg-light rounded-3 p-4">
+                        <div class="row text-center g-4">
+                            <div class="col-md-3 col-6">
+                                <div class="stat-item">
+                                    <i class="bi bi-cup-hot-fill text-primary fs-1 mb-2"></i>
+                                    <h3 class="fw-bold text-primary">@Model.Count()</h3>
+                                    <p class="text-muted mb-0">Menu Items</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="stat-item">
+                                    <i class="bi bi-tags-fill text-success fs-1 mb-2"></i>
+                                    <h3 class="fw-bold text-success">@ViewBag.Categories.Count</h3>
+                                    <p class="text-muted mb-0">Categories</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="stat-item">
+                                    <i class="bi bi-star-fill text-warning fs-1 mb-2"></i>
+                                    <h3 class="fw-bold text-warning">4.8</h3>
+                                    <p class="text-muted mb-0">Average Rating</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="stat-item">
+                                    <i class="bi bi-check-circle-fill text-info fs-1 mb-2"></i>
+                                    <h3 class="fw-bold text-info">@Model.Count(m => m.IsAvailable)</h3>
+                                    <p class="text-muted mb-0">Available Now</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <div class="empty-state">
+                            <i class="bi bi-cup-hot text-muted" style="font-size: 5rem; margin-bottom: 2rem;"></i>
+                            <h3 class="text-muted">No menu items found</h3>
+                            <p class="text-muted mb-4">Please check back later or try a different category.</p>
+                            <a asp-action="Index" class="btn btn-primary">
+                                <i class="bi bi-arrow-left me-2"></i>View All Items
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Special Offers Section -->
+@if (Model != null && Model.Any())
+{
+    <section class="py-5 bg-primary text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h2 class="mb-3">Special Offers Available!</h2>
+                    <p class="lead mb-4">Enjoy our daily specials and seasonal promotions. Limited time offers await!</p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <div class="offer-badge">
+                            <i class="bi bi-percent me-2"></i>20% Off First Order
+                        </div>
+                        <div class="offer-badge">
+                            <i class="bi bi-gift me-2"></i>Buy 2 Get 1 Free
+                        </div>
+                        <div class="offer-badge">
+                            <i class="bi bi-clock me-2"></i>Happy Hour: 3-5 PM
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <div class="floating-element">
+                        <i class="bi bi-gift-fill fs-1 text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<!-- Menu Details Modal -->
+<div class="modal fade" id="menuModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-cup-hot me-2"></i>Menu Item Details
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <!-- Content loaded dynamically via JavaScript -->
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .menu-hero {
+        background: linear-gradient(rgba(111, 78, 55, 0.8), rgba(111, 78, 55, 0.9)), url('/images/menu-bg.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .menu-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="coffee-pattern" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23coffee-pattern)"/></svg>');
+        pointer-events: none;
+    }
+
+    .menu-item-card {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    .menu-item-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-secondary);
+    }
+
+    .menu-item-card:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+
+    .menu-item-card .card-img-top {
+        transition: transform 0.5s ease;
+        height: 220px;
+        object-fit: cover;
+    }
+
+    .menu-item-card:hover .card-img-top {
+        transform: scale(1.1);
+    }
+
+    .price-section {
+        text-align: left;
+    }
+
+    .stat-item {
+        padding: 1rem;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-item:hover {
+        transform: translateY(-5px);
+    }
+
+    .offer-badge {
+        background: rgba(255,255,255,0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .floating-element {
+        animation: gentle-float 3s ease-in-out infinite;
+    }
+
+    @@keyframes gentle-float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    .btn-outline-primary.active {
+        background: var(--gradient-primary);
+        border-color: var(--coffee-brown);
+        color: white;
+        box-shadow: 0 4px 15px rgba(111, 78, 55, 0.3);
+    }
+
+    .empty-state {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .parallax {
+        position: relative;
+    }
+
+    .parallax::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+    }
+
+    .parallax > * {
+        position: relative;
+        z-index: 2;
+    }
+</style>
+
+<script>
+    // Filter active button highlight
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const category = urlParams.get('category');
+
+        const buttons = document.querySelectorAll('.btn-outline-primary');
+        buttons.forEach(button => {
+            const buttonText = button.textContent.trim().replace(/^[^\w]+/, ''); // Remove icon
+            if ((!category && buttonText === 'All Items') ||
+                (category && buttonText === category)) {
+                button.classList.add('active');
+            }
+        });
+
+        // Add loading animation to images
+        const images = document.querySelectorAll('.card-img-top');
+        images.forEach(img => {
+            img.addEventListener('load', function() {
+                this.classList.add('loaded');
+            });
+        });
+    });
+
+    // Placeholder functions for future functionality
+    function addToFavorites(itemId) {
+        // Show a toast or modal
+        alert('Added to favorites! (Feature coming soon)');
+    }
+
+    function shareItem(itemId) {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Check out this menu item!',
+                url: window.location.href
+            });
+        } else {
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copied to clipboard!');
+        }
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
+
+    // Quick view functionality
+    document.querySelectorAll('.view-details-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.id;
+            // Load item details via AJAX
+            fetch(`/Menu/Details/${itemId}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('menuModal').querySelector('.modal-content').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('menuModal')).show();
+                });
+        });
+    });
+</script>

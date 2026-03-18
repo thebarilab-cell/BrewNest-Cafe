@@ -1,0 +1,427 @@
+﻿@model IEnumerable<BrewNestCafe.Models.Gallery>
+@{
+    ViewData["Title"] = "Gallery";
+}
+
+<!-- Hero Section -->
+<section class="gallery-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-4 fw-bold mb-4">Our Cafe Gallery</h1>
+                <p class="lead mb-0">A visual journey through BrewNest Cafe. Explore our ambiance, events, and moments.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <!-- Gallery Filter -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-center flex-wrap">
+                <button class="btn btn-outline-primary me-2 mb-2 active" data-filter="all">All Photos</button>
+                <button class="btn btn-outline-primary me-2 mb-2" data-filter="interior">Interior</button>
+                <button class="btn btn-outline-primary me-2 mb-2" data-filter="food">Food & Drinks</button>
+                <button class="btn btn-outline-primary me-2 mb-2" data-filter="events">Events</button>
+                <button class="btn btn-outline-primary mb-2" data-filter="team">Our Team</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="row" id="galleryGrid">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <div class="col-lg-4 col-md-6 mb-4 gallery-item" data-category="interior">
+                    <div class="gallery-card">
+                        <div class="gallery-image">
+                            <img src="@item.ImageUrl" alt="@item.Title" class="img-fluid">
+                            <div class="gallery-overlay">
+                                <div class="gallery-content">
+                                    @if (!string.IsNullOrEmpty(item.Title))
+                                    {
+                                        <h5>@item.Title</h5>
+                                    }
+                                    @if (!string.IsNullOrEmpty(item.Description))
+                                    {
+                                        <p>@item.Description</p>
+                                    }
+                                    <div class="gallery-actions">
+                                        <button class="btn btn-light btn-sm view-image"
+                                                data-image="@item.ImageUrl"
+                                                data-title="@item.Title">
+                                            <i class="bi bi-zoom-in"></i> View
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gallery-info">
+                            <small class="text-muted">
+                                <i class="bi bi-calendar me-1"></i>
+                                @item.UploadedAt.ToString("MMM dd, yyyy")
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="bi bi-images display-1 text-muted mb-3 d-block"></i>
+                    <h3>Gallery Coming Soon</h3>
+                    <p class="text-muted">We're preparing some beautiful shots of our cafe for you.</p>
+                    <a href="/" class="btn btn-primary">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Gallery Stats -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="gallery-stats p-4 text-center">
+                    <div class="row">
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <h3 class="text-primary">@Model.Count()</h3>
+                            <p class="mb-0">Total Photos</p>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <h3 class="text-primary">4</h3>
+                            <p class="mb-0">Categories</p>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <h3 class="text-primary">@Model.Max(g => g.UploadedAt).ToString("MMMM")</h3>
+                            <p class="mb-0">Latest Update</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h3 class="text-primary">24/7</h3>
+                            <p class="mb-0">Open for Visits</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Image Preview Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" class="img-fluid rounded" style="max-height: 70vh;">
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a href="#" id="downloadImage" class="btn btn-primary">
+                    <i class="bi bi-download me-2"></i>Download
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg me-2"></i>Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="container-fluid bg-light py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="mb-4">Share Your BrewNest Moments</h2>
+                <p class="lead mb-4">Tag us on social media with #BrewNestCafe to be featured in our gallery!</p>
+                <div class="social-links-large">
+                    <a href="#" class="social-icon-large me-3">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon-large me-3">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="#" class="social-icon-large">
+                        <i class="bi bi-twitter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .gallery-hero {
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+    }
+
+    .gallery-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        height: 100%;
+    }
+
+        .gallery-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+    .gallery-image {
+        position: relative;
+        overflow: hidden;
+        height: 250px;
+    }
+
+        .gallery-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+    .gallery-card:hover .gallery-image img {
+        transform: scale(1.05);
+    }
+
+    .gallery-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+        padding: 20px;
+    }
+
+    .gallery-card:hover .gallery-overlay {
+        opacity: 1;
+    }
+
+    .gallery-content {
+        color: white;
+        text-align: center;
+        transform: translateY(20px);
+        transition: transform 0.3s;
+    }
+
+    .gallery-card:hover .gallery-content {
+        transform: translateY(0);
+    }
+
+    .gallery-content h5 {
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .gallery-content p {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        opacity: 0.9;
+    }
+
+    .gallery-info {
+        padding: 15px;
+        background: white;
+    }
+
+    .gallery-stats {
+        background: linear-gradient(135deg, #6F4E37, #3E2723);
+        color: white;
+        border-radius: 15px;
+    }
+
+        .gallery-stats h3 {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+    .btn-outline-primary.active {
+        background-color: #6F4E37;
+        border-color: #6F4E37;
+        color: white;
+    }
+
+    .social-icon-large {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: #6F4E37;
+        color: white;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+
+        .social-icon-large:hover {
+            background: #3E2723;
+            transform: translateY(-5px);
+            color: white;
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .gallery-hero {
+            padding: 60px 0;
+        }
+
+            .gallery-hero h1 {
+                font-size: 2.5rem;
+            }
+
+        .gallery-image {
+            height: 200px;
+        }
+
+        .gallery-stats .row > div {
+            margin-bottom: 20px;
+        }
+    }
+</style>
+
+<script>
+    // Gallery Filter
+    document.querySelectorAll('[data-filter]').forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+
+            // Update active button
+            document.querySelectorAll('[data-filter]').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            // Filter items
+            const items = document.querySelectorAll('.gallery-item');
+            items.forEach(item => {
+                if (filter === 'all' || item.dataset.category === filter) {
+                    item.style.display = 'block';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                    }, 10);
+                } else {
+                    item.style.opacity = '0';
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+    });
+
+    // Image Preview
+    document.querySelectorAll('.view-image').forEach(button => {
+        button.addEventListener('click', function() {
+            const imageUrl = this.dataset.image;
+            const title = this.dataset.title || 'Gallery Image';
+
+            document.getElementById('modalImage').src = imageUrl;
+            document.getElementById('imageModalTitle').textContent = title;
+            document.getElementById('downloadImage').href = imageUrl;
+
+            new bootstrap.Modal(document.getElementById('imageModal')).show();
+        });
+    });
+
+    // Initialize gallery with sample data if empty
+    document.addEventListener('DOMContentLoaded', function() {
+        const galleryGrid = document.getElementById('galleryGrid');
+        const galleryItems = galleryGrid.querySelectorAll('.gallery-item');
+
+        if (galleryItems.length === 0) {
+            // Add sample gallery items for demonstration
+            const sampleItems = [
+                {
+                    image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                    title: 'Cafe Interior',
+                    category: 'interior',
+                    description: 'Our cozy seating area'
+                },
+                {
+                    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                    title: 'Fresh Coffee',
+                    category: 'food',
+                    description: 'Freshly brewed coffee'
+                },
+                {
+                    image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                    title: 'Evening Ambiance',
+                    category: 'interior',
+                    description: 'Perfect for evening gatherings'
+                }
+            ];
+
+            sampleItems.forEach((item, index) => {
+                const col = document.createElement('div');
+                col.className = 'col-lg-4 col-md-6 mb-4 gallery-item';
+                col.dataset.category = item.category;
+                col.innerHTML = `
+                    <div class="gallery-card">
+                        <div class="gallery-image">
+                            <img src="${item.image}" alt="${item.title}" class="img-fluid">
+                            <div class="gallery-overlay">
+                                <div class="gallery-content">
+                                    <h5>${item.title}</h5>
+                                    <p>${item.description}</p>
+                                    <div class="gallery-actions">
+                                        <button class="btn btn-light btn-sm view-image"
+                                                data-image="${item.image}"
+                                                data-title="${item.title}">
+                                            <i class="bi bi-zoom-in"></i> View
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gallery-info">
+                            <small class="text-muted">
+                                <i class="bi bi-calendar me-1"></i>
+                                Sample Image
+                            </small>
+                        </div>
+                    </div>
+                `;
+                galleryGrid.appendChild(col);
+            });
+
+            // Re-attach event listeners to new buttons
+            document.querySelectorAll('.view-image').forEach(button => {
+                button.addEventListener('click', function() {
+                    const imageUrl = this.dataset.image;
+                    const title = this.dataset.title || 'Gallery Image';
+
+                    document.getElementById('modalImage').src = imageUrl;
+                    document.getElementById('imageModalTitle').textContent = title;
+                    document.getElementById('downloadImage').href = imageUrl;
+
+                    new bootstrap.Modal(document.getElementById('imageModal')).show();
+                });
+            });
+        }
+    });
+</script>

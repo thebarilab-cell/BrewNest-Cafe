@@ -1,0 +1,142 @@
+﻿@model IEnumerable<BrewNestCafe.Models.Feedback>
+@{
+    ViewData["Title"] = "Customer Feedback";
+}
+
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold mb-3">What Our Customers Say</h1>
+            <p class="lead mb-4">Read honest reviews from our valued customers</p>
+            <a asp-action="Create" class="btn btn-primary btn-lg">
+                <i class="bi bi-pencil-square me-2"></i>Share Your Experience
+            </a>
+        </div>
+    </div>
+
+    <!-- Feedback List -->
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var feedback in Model)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feedback-card p-4 h-100">
+                        <!-- Rating Stars -->
+                        <div class="rating mb-3">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= feedback.Rating)
+                                {
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-star text-muted"></i>
+                                }
+                            }
+                            <span class="ms-2 text-muted">@feedback.Rating/5</span>
+                        </div>
+
+                        <!-- Feedback Message -->
+                        <p class="mb-4">"@feedback.Message"</p>
+
+                        <!-- Customer Info -->
+                        <div class="d-flex align-items-center">
+                            <div class="customer-avatar me-3">
+                                <i class="bi bi-person-circle fs-2 text-muted"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">@feedback.Name</h6>
+                                <small class="text-muted">
+                                    @feedback.SubmittedAt.ToString("MMMM dd, yyyy")
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="bi bi-chat-quote display-1 text-muted mb-4"></i>
+                    <h4>No feedback yet</h4>
+                    <p class="mb-4">Be the first to share your experience!</p>
+                    <a asp-action="Create" class="btn btn-primary">Write Feedback</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Statistics (Optional) -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="stats-card p-4">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <h3 class="text-primary">@Model.Count()</h3>
+                            <p class="mb-0">Total Reviews</p>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <h3 class="text-primary">@Model.Average(f => f.Rating).ToString("0.0")</h3>
+                            <p class="mb-0">Average Rating</p>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <h3 class="text-primary">@Model.Count(f => f.Rating >= 4)</h3>
+                            <p class="mb-0">Positive Reviews</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h3 class="text-primary">@Model.Max(f => f.Rating)</h3>
+                            <p class="mb-0">Highest Rating</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .feedback-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+        border-top: 4px solid var(--soft-gold);
+    }
+
+        .feedback-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+    .customer-avatar {
+        width: 50px;
+        height: 50px;
+        background-color: var(--cream-white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .rating {
+        font-size: 1.2rem;
+    }
+
+    .stats-card {
+        background: linear-gradient(135deg, var(--coffee-brown), var(--dark-brown));
+        color: white;
+        border-radius: 15px;
+    }
+
+        .stats-card h3 {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+</style>

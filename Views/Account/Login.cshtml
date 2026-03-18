@@ -1,0 +1,293 @@
+﻿@model BrewNestCafe.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Admin Login";
+}
+
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card login-card shadow-lg">
+                <!-- Header -->
+                <div class="card-header text-center py-4 bg-coffee-brown text-white">
+                    <div class="login-icon mb-3">
+                        <i class="bi bi-shield-lock display-4"></i>
+                    </div>
+                    <h2 class="mb-0">Admin Login</h2>
+                    <p class="mb-0">BrewNest Cafe Management System</p>
+                </div>
+
+                <!-- Login Form -->
+                <div class="card-body p-4">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <h6 class="alert-heading">Login Failed</h6>
+                            <div asp-validation-summary="All" class="mb-0"></div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Login" method="post">
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+                                <input asp-for="Email" class="form-control" placeholder="admin@brewnest.com"
+                                       value="admin@brewnest.com">
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-lock"></i>
+                                </span>
+                                <input asp-for="Password" type="password" class="form-control"
+                                       placeholder="Enter password" value="Admin@123">
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input asp-for="RememberMe" class="form-check-input" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">Remember me</label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-coffee btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Demo Credentials -->
+                    <div class="demo-credentials mt-4 pt-3 border-top">
+                        <div class="alert alert-info mb-0">
+                            <h6 class="alert-heading mb-2">
+                                <i class="bi bi-info-circle me-2"></i>Demo Admin Credentials
+                            </h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Email:</strong><br>
+                                    <code>admin@brewnest.com</code>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Password:</strong><br>
+                                    <code>Admin@123</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer text-center py-3 bg-light">
+                    <a href="/" class="text-decoration-none text-coffee-brown">
+                        <i class="bi bi-arrow-left me-2"></i>Return to Homepage
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Form validation enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', function(e) {
+                const email = document.getElementById('Email').value;
+                const password = document.getElementById('Password').value;
+
+                if (!email || !password) {
+                    e.preventDefault();
+                    alert('Please fill in both email and password fields.');
+                    return false;
+                }
+
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="bi bi-hourglass me-2"></i>Logging in...';
+                submitBtn.disabled = true;
+
+                // Re-enable after 3 seconds if still on page
+                setTimeout(function() {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 3000);
+            });
+
+            // Auto focus on email field
+            document.getElementById('Email').focus();
+        });
+    </script>
+}
+
+<style>
+    /* Custom CSS Variables */
+    :root {
+        --coffee-brown: #6F4E37;
+        --cream-white: #F5F5DC;
+        --soft-gold: #D4AF37;
+        --dark-brown: #3E2723;
+        --light-coffee: #8B7355;
+    }
+
+    /* Body Background */
+    body {
+        background: linear-gradient(rgba(245, 245, 220, 0.95), rgba(245, 245, 220, 0.95)), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+
+    /* Login Card */
+    .login-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        margin-top: 2rem;
+    }
+
+    .bg-coffee-brown {
+        background: linear-gradient(135deg, var(--coffee-brown), var(--dark-brown)) !important;
+    }
+
+    .login-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    /* Form Styling */
+    .form-control:focus {
+        border-color: var(--coffee-brown);
+        box-shadow: 0 0 0 0.25rem rgba(111, 78, 55, 0.25);
+    }
+
+    .input-group-text {
+        background-color: var(--cream-white);
+        border-color: #dee2e6;
+    }
+
+    /* Button Styling */
+    .btn-coffee {
+        background: linear-gradient(135deg, var(--coffee-brown), var(--light-coffee));
+        border: none;
+        color: white;
+        padding: 12px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+        .btn-coffee:hover {
+            background: linear-gradient(135deg, var(--dark-brown), var(--coffee-brown));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(111, 78, 55, 0.3);
+            color: white;
+        }
+
+        .btn-coffee:active {
+            transform: translateY(0);
+        }
+
+    /* Demo Credentials */
+    .demo-credentials code {
+        background: #f8f9fa;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.9em;
+        color: var(--dark-brown);
+        font-family: monospace;
+    }
+
+    /* Text Colors */
+    .text-coffee-brown {
+        color: var(--coffee-brown) !important;
+    }
+
+        .text-coffee-brown:hover {
+            color: var(--dark-brown) !important;
+        }
+
+    /* Alert Styling */
+    .alert-info {
+        background-color: rgba(111, 78, 55, 0.1);
+        border-color: rgba(111, 78, 55, 0.2);
+        color: var(--dark-brown);
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .container.py-5 {
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+        }
+
+        .login-card {
+            margin-top: 1rem;
+        }
+
+        .card-body {
+            padding: 1.5rem !important;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .col-md-6 {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .demo-credentials .row .col-6 {
+            margin-bottom: 10px;
+        }
+    }
+
+    /* Animation for Login */
+    .login-card {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Form Field Focus Animation */
+    .form-control {
+        transition: all 0.3s;
+    }
+
+        .form-control:focus {
+            transform: translateY(-1px);
+        }
+</style>

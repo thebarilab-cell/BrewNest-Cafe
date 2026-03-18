@@ -1,0 +1,50 @@
+﻿@model BrewNestCafe.Models.ContactMessage
+
+<div class="message-details">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <strong>Name:</strong>
+            <p>@Model.Name</p>
+        </div>
+        <div class="col-md-6">
+            <strong>Email:</strong>
+            <p><a href="mailto:@Model.Email">@Model.Email</a></p>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <strong>Date:</strong>
+            <p>@Model.Date.ToString("MMMM dd, yyyy hh:mm tt")</p>
+        </div>
+        <div class="col-md-6">
+            <strong>Status:</strong>
+            <p>
+                @if (Model.IsRead)
+                {
+                    <span class="badge bg-success">Read</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning">Unread</span>
+                }
+            </p>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <strong>Message:</strong>
+        <div class="border p-3 rounded bg-light">
+            @Model.Message
+        </div>
+    </div>
+
+    <div class="text-end">
+        <a href="mailto:@Model.Email" class="btn btn-primary">
+            <i class="bi bi-reply me-2"></i>Reply
+        </a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+        </button>
+    </div>
+</div>

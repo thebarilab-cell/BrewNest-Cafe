@@ -1,0 +1,160 @@
+﻿@model BrewNestCafe.Models.Feedback
+@{
+    ViewData["Title"] = "Share Feedback";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="feedback-form-card p-4">
+                <h1 class="text-center mb-4">Share Your Experience</h1>
+                <p class="text-center text-muted mb-5">We value your feedback to help us improve</p>
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                <form asp-action="Create" method="post">
+                    <!-- Name -->
+                    <div class="mb-4">
+                        <label asp-for="Name" class="form-label">Your Name *</label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter your name" required>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <!-- Email (Optional) -->
+                    <div class="mb-4">
+                        <label asp-for="Email" class="form-label">Your Email (Optional)</label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="Enter your email">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="mb-4">
+                        <label class="form-label">Your Rating *</label>
+                        <div class="rating-input mb-3">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <i class="bi bi-star fs-2 rating-star" data-value="@i"></i>
+                            }
+                            <input type="hidden" asp-for="Rating" id="ratingValue" required />
+                        </div>
+                        <span asp-validation-for="Rating" class="text-danger"></span>
+                        <div class="d-flex justify-content-between text-muted">
+                            <small>Poor</small>
+                            <small>Excellent</small>
+                        </div>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="mb-4">
+                        <label asp-for="Message" class="form-label">Your Feedback *</label>
+                        <textarea asp-for="Message" class="form-control" rows="6"
+                                  placeholder="Share your experience with us..." required></textarea>
+                        <span asp-validation-for="Message" class="text-danger"></span>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a asp-action="Index" class="btn btn-outline-secondary me-md-2">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Reviews
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send me-2"></i>Submit Feedback
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .feedback-form-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .rating-input {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .rating-star {
+        color: #ddd;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+        .rating-star:hover,
+        .rating-star.selected {
+            color: #ffc107;
+        }
+
+    .form-control:focus {
+        border-color: var(--coffee-brown);
+        box-shadow: 0 0 0 0.25rem rgba(111, 78, 55, 0.25);
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Star rating functionality
+        document.querySelectorAll('.rating-star').forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.dataset.value;
+                document.getElementById('ratingValue').value = rating;
+
+                // Update star display
+                document.querySelectorAll('.rating-star').forEach(s => {
+                    if (s.dataset.value <= rating) {
+                        s.classList.add('selected');
+                        s.classList.remove('bi-star');
+                        s.classList.add('bi-star-fill');
+                    } else {
+                        s.classList.remove('selected');
+                        s.classList.remove('bi-star-fill');
+                        s.classList.add('bi-star');
+                    }
+                });
+            });
+
+            // Hover effect
+            star.addEventListener('mouseenter', function() {
+                const rating = this.dataset.value;
+                document.querySelectorAll('.rating-star').forEach(s => {
+                    if (s.dataset.value <= rating) {
+                        s.style.color = '#ffc107';
+                    }
+                });
+            });
+
+            star.addEventListener('mouseleave', function() {
+                const selectedRating = document.getElementById('ratingValue').value;
+                document.querySelectorAll('.rating-star').forEach(s => {
+                    if (!selectedRating || s.dataset.value > selectedRating) {
+                        s.style.color = '#ddd';
+                    }
+                });
+            });
+        });
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const rating = document.getElementById('ratingValue').value;
+            if (!rating) {
+                e.preventDefault();
+                alert('Please select a rating');
+            }
+        });
+    </script>
+}

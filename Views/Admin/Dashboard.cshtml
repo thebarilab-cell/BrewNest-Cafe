@@ -1,0 +1,255 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+
+    // Safe way to access ViewBag.Stats
+    var stats = ViewBag.Stats as dynamic;
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h2">Admin Dashboard</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary mb-1">
+                                Menu Items
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold">@(stats?.TotalMenuItems ?? 0)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-menu-button-wide fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success mb-1">
+                                Total Feedbacks
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold">@(stats?.TotalFeedbacks ?? 0)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-chat-left-text fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning mb-1">
+                                Pending Feedbacks
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold">@(stats?.PendingFeedbacks ?? 0)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-clock-history fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info mb-1">
+                                Unread Messages
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold">@(stats?.UnreadMessages ?? 0)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-envelope fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a asp-action="MenuCRUD" class="btn btn-primary w-100">
+                                <i class="bi bi-menu-button me-2"></i>Manage Menu
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a asp-action="FeedbackList" class="btn btn-success w-100">
+                                <i class="bi bi-chat-left-text me-2"></i>Manage Feedback
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a asp-action="GalleryManager" class="btn btn-info w-100">
+                                <i class="bi bi-images me-2"></i>Manage Gallery
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a asp-action="ViewMessages" class="btn btn-warning w-100">
+                                <i class="bi bi-envelope me-2"></i>View Messages
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-check-circle-fill text-success me-3"></i>
+                                <div>
+                                    <h6 class="mb-1">System Updated</h6>
+                                    <small class="text-muted">Just now</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person-plus-fill text-primary me-3"></i>
+                                <div>
+                                    <h6 class="mb-1">Admin logged in</h6>
+                                    <small class="text-muted">A few moments ago</small>
+                                </div>
+                            </div>
+                        </div>
+                        @if (stats?.TotalMenuItems > 0)
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-cup-hot-fill text-warning me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Menu Items Available</h6>
+                                        <small class="text-muted">@(stats?.TotalMenuItems ?? 0) items in menu</small>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">System Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Database Connection
+                            <span class="badge bg-success">Connected</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Server Status
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Menu Items
+                            <span class="badge bg-info">@(stats?.TotalMenuItems ?? 0)</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Customer Feedbacks
+                            <span class="badge bg-info">@(stats?.TotalFeedbacks ?? 0)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .border-left-primary {
+        border-left: 4px solid #6F4E37 !important;
+    }
+
+    .border-left-success {
+        border-left: 4px solid #28a745 !important;
+    }
+
+    .border-left-warning {
+        border-left: 4px solid #ffc107 !important;
+    }
+
+    .border-left-info {
+        border-left: 4px solid #17a2b8 !important;
+    }
+
+    .list-group-item {
+        border: none;
+        padding: 1rem;
+    }
+
+    .text-xs {
+        font-size: 0.8rem;
+    }
+
+    .font-weight-bold {
+        font-weight: 600;
+    }
+
+    .no-gutters {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+        .no-gutters > .col,
+        .no-gutters > [class*="col-"] {
+            padding-right: 0;
+            padding-left: 0;
+        }
+
+    .badge {
+        font-size: 0.8em;
+        padding: 0.4em 0.8em;
+    }
+</style>

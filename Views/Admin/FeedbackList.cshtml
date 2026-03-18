@@ -1,0 +1,236 @@
+﻿@model IEnumerable<BrewNestCafe.Models.Feedback>
+@{
+    ViewData["Title"] = "Manage Feedback";
+}
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2">Manage Feedback</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-action="Dashboard">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Feedback</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div>
+                    <span class="badge bg-success me-2">
+                        Approved: @Model?.Count(f => f.IsApproved)
+                    </span>
+                    <span class="badge bg-warning">
+                        Pending: @Model?.Count(f => !f.IsApproved)
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Feedback Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Rating</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var feedback in Model.OrderByDescending(f => f.SubmittedAt))
+                            {
+                                <tr>
+                                    <td>@feedback.Id</td>
+                                    <td>@feedback.Name</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(feedback.Email))
+                                        {
+                                            <a href="mailto:@feedback.Email">@feedback.Email</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No email</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="rating">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= feedback.Rating)
+                                                {
+                                                    <i class="bi bi-star-fill text-warning"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-star text-muted"></i>
+                                                }
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="feedback-message">
+                                            @if (feedback.Message.Length > 100)
+                                            {
+                                                <span class="short-message">@feedback.Message.Substring(0, 100)...</span>
+                                                <span class="full-message d-none">@feedback.Message</span>
+                                                <a href="#" class="read-more-link" onclick="toggleMessage(this); return false;">Read more</a>
+                                            }
+                                            else
+                                            {
+                                                @feedback.Message
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <small>@feedback.SubmittedAt.ToString("MMM dd, yyyy")</small>
+                                        <br>
+                                        <small class="text-muted">@feedback.SubmittedAt.ToString("hh:mm tt")</small>
+                                    </td>
+                                    <td>
+                                        @if (feedback.IsApproved)
+                                        {
+                                            <span class="badge bg-success">Approved</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">Pending</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!feedback.IsApproved)
+                                        {
+                                            <form asp-action="ApproveFeedback" method="post" class="d-inline">
+                                                <input type="hidden" name="id" value="@feedback.Id" />
+                                                <button type="submit" class="btn btn-sm btn-success" title="Approve">
+                                                    <i class="bi bi-check-circle"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                        <form asp-action="DeleteFeedback" method="post" class="d-inline">
+                                            <input type="hidden" name="id" value="@feedback.Id" />
+                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Are you sure you want to delete this feedback?')" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center py-5">
+                                    <i class="bi bi-chat-left-text display-4 text-muted mb-3 d-block"></i>
+                                    <h5>No feedback found</h5>
+                                    <p class="text-muted">Customer feedback will appear here.</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rating {
+        font-size: 0.9rem;
+    }
+
+    .feedback-message {
+        max-width: 300px;
+    }
+
+    .read-more-link {
+        font-size: 0.8em;
+        color: var(--coffee-brown);
+        text-decoration: none;
+    }
+
+        .read-more-link:hover {
+            text-decoration: underline;
+        }
+
+    .badge {
+        font-size: 0.8em;
+        padding: 0.4em 0.8em;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+</style>
+
+<script>
+    // Toggle message visibility
+    function toggleMessage(link) {
+        const feedbackDiv = link.parentElement;
+        const shortMessage = feedbackDiv.querySelector('.short-message');
+        const fullMessage = feedbackDiv.querySelector('.full-message');
+
+        if (shortMessage.classList.contains('d-none')) {
+            shortMessage.classList.remove('d-none');
+            fullMessage.classList.add('d-none');
+            link.textContent = 'Read more';
+        } else {
+            shortMessage.classList.add('d-none');
+            fullMessage.classList.remove('d-none');
+            link.textContent = 'Show less';
+        }
+    }
+
+    // Filter functionality
+    function filterFeedback(status) {
+        const rows = document.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            const statusBadge = row.querySelector('.badge');
+            if (status === 'all' ||
+                (status === 'approved' && statusBadge.classList.contains('bg-success')) ||
+                (status === 'pending' && statusBadge.classList.contains('bg-warning'))) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add filter buttons if needed
+        const cardHeader = document.querySelector('.card-header');
+        if (cardHeader) {
+            const filterHtml = `
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-outline-primary" onclick="filterFeedback('all')">All</button>
+                    <button type="button" class="btn btn-outline-success" onclick="filterFeedback('approved')">Approved</button>
+                    <button type="button" class="btn btn-outline-warning" onclick="filterFeedback('pending')">Pending</button>
+                </div>
+            `;
+            cardHeader.innerHTML += filterHtml;
+        }
+    });
+</script>
